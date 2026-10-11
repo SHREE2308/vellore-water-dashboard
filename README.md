@@ -1,17 +1,14 @@
 ﻿# Vellore Water Security Command Center
 
-A Power BI executive dashboard for Vellore district water balance analysis (2013-2025).
+A single-page Power BI executive dashboard for water resource planning in Vellore district, Tamil Nadu. Covers 5 assembly constituencies from 2013-2025.
 
-## Contents
-- Vellore_Water_Security_Command_Center.pbix - Main Power BI dashboard
-- data/ - Source CSV datasets (9 files)
-- flat_dashboard.csv - Denormalized single-table export
-- vellore_data.zip - All data in compressed form
-- vellore_measures.dax - DAX measures reference (if present)
+## Key Features
+- Unified executive view with KPIs: Water Available, Water Demand, Water Gap, Per-Capita Availability, GW Extraction Stage %, Avg Monthly Rainfall
+- Demand-supply balance, constituency comparisons, rainfall seasonality, and gap analysis
+- Dark water-themed design (1920x1080, 16:9)
 
-## How to open
-1. Open the .pbix file in Power BI Desktop (Windows).
-2. If a refresh/cyclic reference error appears, close the error dialog - embedded data is already loaded.
+## Data
+9 CSV datasets covering constituency, year, rainfall (monthly/observed), groundwater (CGWB), water bodies, status guide, and source references. Also includes flat denormalized export for portability.
 
-## Notes
-This is a read-only organized copy. Original files remain untouched.
+## Usage
+Open Vellore_Water_Security_Command_Center.pbix in Power BI Desktop. If a refresh/cyclic reference error appears on load, close the dialog - embedded data is already loaded.
