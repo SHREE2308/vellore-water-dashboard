@@ -1,0 +1,8 @@
+Source_Name,Publisher,Data_Type,URL,Notes
+"CGWB Dynamic Ground Water Resources of Tamil Nadu (firka-level, 2024 assessment)",Central Ground Water Board / TN State Groundwater Wing,official,https://cgwb.gov.in/,"State annual assessment; recharge/extractable/extraction in ham, area in ha"
+"Census of India 2011 — Panchayat Union population (TNRD, Vellore District)",Tamil Nadu Rural Development Department / Census 2011,official,https://www.tnrd.tn.gov.in/,Block (PU) wise rural population 2011
+Census of India 2011 — Town / Municipality population,Census 2011 (via census2011.co.in town abstracts),official,https://www.census2011.co.in/,Town-level population 2011 (Municipality / TP / Census town)
+"NASA POWER monthly precipitation (PRECTOTCORR, MERRA-2 reanalysis)",NASA POWER / NASA GES DISC,reanalysis,https://power.larc.nasa.gov/docs/services/api/,"Monthly average daily precipitation at constituency centroid, 1991-2025; converted to monthly totals"
+State of Tamil Nadu Surface & Groundwater (SW&GW) telemetry rainfall,TN Water Resources Department / NWDP,observed,https://nwdp.nwic.gov.in/,"Hourly rainfall, Vellore district stations (Gollapally, Vellore) — partial coverage, validation only"
+SAC/ISRO water bodies shapefile (TN) via NWDP,Space Applications Centre (ISRO) / NWIC,observed,https://nwdp.nwic.gov.in/,"Satellite-derived surface water bodies (>0.1 ha), nearest-centroid assignment within district box"
+Derived water balance model (this project),VELLORE WATER BALANCE & DEMAND ANALYTICS (project methodology),derived,,Supply = official extractable GW + derived usable runoff; demand = derived domestic + official/derived agriculture + official industrial; gaps interpolated across years with documented indices

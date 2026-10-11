@@ -1,0 +1,24 @@
+﻿# Power BI
+*.pbix.lock
+*.tmp
+~*.pbix
+Thumbs.db
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary
+_temp_*/
+_probes/
+pbixproj_target/

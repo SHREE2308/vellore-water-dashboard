@@ -1,0 +1,5 @@
+Status,Band,Color
+Surplus,Surplus,#00A896
+Balanced,Balanced (<15%),#00C9C8
+Watch,Watch (15-40%),#F4C95D
+Critical,Critical (>40%),#E85D5D
