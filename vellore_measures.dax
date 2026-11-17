@@ -1,73 +1,104 @@
 // ============================================================
-// VELLORE WATER BALANCE & DEMAND ANALYTICS — DAX Measures
-// File: vellore_measures.dax
-// Apply in Power BI Desktop: Modelling > New measure (or paste in DAX studio)
-// All measures are cross-filter safe with Constituency/Year slicers.
+// Vellore Water Security Command Center - DAX Measures
+// Exported from the PBIX semantic model (table: WaterBalance)
+// Keep in sync with Vellore_Water_Security_Command_Center.pbix
 // ============================================================
 
-// ---------- SUPPLY ----------
-WaterAvailable := SUM(fact_constituency_year[Water_Available_MCM])
-SupplyGroundwater := SUM(fact_constituency_year[Supply_GW_MCM])
-SupplySurface := SUM(fact_constituency_year[Supply_Surface_MCM])
+// ---------- WaterBalance ----------
+Water Available := SUM ( 'WaterBalance'[Water Available (MCM)] )
 
-// ---------- DEMAND ----------
-WaterDemand := SUM(fact_constituency_year[Water_Demand_MCM])
-DemandDomestic := SUM(fact_constituency_year[Demand_Domestic_MCM])
-DemandAgriculture := SUM(fact_constituency_year[Demand_Agriculture_MCM])
-DemandIndustrial := SUM(fact_constituency_year[Demand_Industrial_MCM])
-DemandShareDomestic := DIVIDE([DemandDomestic], [WaterDemand])
-DemandShareAgriculture := DIVIDE([DemandAgriculture], [WaterDemand])
-DemandShareIndustrial := DIVIDE([DemandIndustrial], [WaterDemand])
+Supply Groundwater := SUM ( 'WaterBalance'[Supply GW (MCM)] )
 
-// ---------- BALANCE & GAP ----------
-WaterBalance := SUM(fact_constituency_year[Water_Balance_MCM])
-WaterGap := SUM(fact_constituency_year[Gap_MCM])
-GapPct := DIVIDE([WaterGap], [WaterDemand], 0)
-SupplyCoveragePct := DIVIDE([WaterAvailable], [WaterDemand], 0)
+Supply Surface := SUM ( 'WaterBalance'[Supply Surface (MCM)] )
 
-// ---------- RAINFALL ----------
-Rainfall := SUM(fact_constituency_year[Rainfall_mm])
-RainfallNormal := SUM(fact_constituency_year[Rainfall_Normal_mm])
-RainfallAnomalyPct := SUM(fact_constituency_year[Rainfall_Anomaly_pct])
-RainfallVsNormalPct := DIVIDE([Rainfall], [RainfallNormal]) - 1
+Water Demand := SUM ( 'WaterBalance'[Water Demand (MCM)] )
 
-// Monsoon (Jun-Sep) vs Non-Monsoon rainfall, from monthly table
-MonsoonRain := CALCULATE(SUM(fact_rainfall_month[Rainfall_mm]),
-                         fact_rainfall_month[Month] IN {6,7,8,9})
-NonMonsoonRain := CALCULATE(SUM(fact_rainfall_month[Rainfall_mm]),
-                            NOT fact_rainfall_month[Month] IN {6,7,8,9})
-MonsoonSharePct := DIVIDE([MonsoonRain], [MonsoonRain] + [NonMonsoonRain])
+Demand Domestic := SUM ( 'WaterBalance'[Demand Domestic (MCM)] )
 
-// ---------- REAL-TIME / STATE ----------
-GWExtractionStage := AVERAGE(fact_constituency_year[GW_Stage_Pct])
+Demand Agriculture := SUM ( 'WaterBalance'[Demand Agriculture (MCM)] )
 
-// ---------- STORAGE ----------
-Storage := SUM(fact_constituency_year[Storage_MCM])
-StorageCapacity := SUM(fact_constituency_year[Storage_Capacity_MCM])
-StoragePct := SUM(fact_constituency_year[Storage_Pct])
+Demand Industrial := SUM ( 'WaterBalance'[Demand Industrial (MCM)] )
 
-// ---------- POPULATION / PER-CAPITA ----------
-TotalPopulation := SUM(fact_constituency_year[Population])
-PerCapitaAvailabilityM3 := DIVIDE([WaterAvailable] * 1000000, [TotalPopulation])
-PerCapitaDemandM3 := DIVIDE([WaterDemand] * 1000000, [TotalPopulation])
-PerCapitaGapLitres := DIVIDE([WaterGap] * 1000000 * 1000, [TotalPopulation] * 365)
+Share Domestic := DIVIDE ( [Demand Domestic], [Water Demand] )
 
-// ---------- TIME INTELLIGENCE ----------
-// NOTE: Year is a discrete integer column; use these with a Calendar/Year table if desired.
-YoYBalanceChange :=
-    VAR _maxY = MAX(dim_year[Year])
-    VAR _cur = CALCULATE([WaterBalance], dim_year[Year] = _maxY)
-    VAR _prv = CALCULATE([WaterBalance], dim_year[Year] = _maxY - 1)
-    RETURN _cur - _prv
+Share Agriculture := DIVIDE ( [Demand Agriculture], [Water Demand] )
 
-// Latest year selection (default view)
-IsLatestYear := dim_year[Year] = MAX(dim_year[Year])
+Share Industrial := DIVIDE ( [Demand Industrial], [Water Demand] )
 
-// Gap severity flags (reusable in visual-level filters)
-IsCritical := SUM(fact_constituency_year[Gap_Pct]) > 40
-IsWatch := SUM(fact_constituency_year[Gap_Pct]) > 15 && SUM(fact_constituency_year[Gap_Pct]) <= 40
-IsBalanced := SUM(fact_constituency_year[Gap_Pct]) >= 0 && SUM(fact_constituency_year[Gap_Pct]) <= 15
+Balance := SUM ( 'WaterBalance'[Balance (MCM)] )
 
-// ---------- WATER BODIES (satellite) ----------
-WaterbodyCount := SUM(fact_water_body[Count_Bodies])
-WaterbodySurfaceHa := SUM(fact_water_body[Total_Area_Ha])
+Water Gap := SUM ( 'WaterBalance'[Gap (MCM)] )
+
+Gap % := DIVIDE ( [Water Gap], [Water Demand] )
+
+Supply Coverage % := DIVIDE ( [Water Available], [Water Demand] )
+
+Total Rainfall (mm) := SUM ( 'WaterBalance'[Rainfall (mm)] )
+
+Total Rainfall Normal (mm) := SUM ( 'WaterBalance'[Rainfall Normal (mm)] )
+
+Rainfall Anomaly % := SUM ( 'WaterBalance'[Rainfall Anomaly (%)] )
+
+Rainfall vs Normal % := DIVIDE ( [Total Rainfall (mm)], [Total Rainfall Normal (mm)] ) - 1
+
+Avg Monthly Rainfall := AVERAGE ( 'Rainfall Monthly'[Rainfall (mm)] )
+
+Monsoon Rain := CALCULATE ( SUM ( 'Rainfall Monthly'[Rainfall (mm)] ), 'Rainfall Monthly'[Month] IN { 6, 7, 8, 9 } )
+
+Non-Monsoon Rain := CALCULATE ( SUM ( 'Rainfall Monthly'[Rainfall (mm)] ), NOT 'Rainfall Monthly'[Month] IN { 6, 7, 8, 9 } )
+
+Monsoon Share % := DIVIDE ( [Monsoon Rain], [Monsoon Rain] + [Non-Monsoon Rain] )
+
+GW Extraction Stage % := AVERAGE ( 'WaterBalance'[GW Stage (%)] )
+
+Storage := SUM ( 'WaterBalance'[Storage (MCM)] )
+
+Storage Capacity := SUM ( 'WaterBalance'[Storage Capacity (MCM)] )
+
+Storage % := SUM ( 'WaterBalance'[Storage (%)] )
+
+Total Population := SUM ( 'WaterBalance'[Population] )
+
+Per-Capita Availability (m3) := DIVIDE ( [Water Available] * 1000000, [Total Population] )
+
+Per-Capita Demand (m3) := DIVIDE ( [Water Demand] * 1000000, [Total Population] )
+
+Per-Capita Gap (lpcd) := DIVIDE ( [Water Gap] * 1000000000, [Total Population] * 365 )
+
+Balance YoY := VAR MaxYear = MAX ( 'Year'[Year] ) VAR CurrentBalance = CALCULATE ( [Balance], 'Year'[Year] = MaxYear ) VAR PriorBalance = CALCULATE ( [Balance], 'Year'[Year] = MaxYear - 1 ) RETURN CurrentBalance - PriorBalance
+
+Latest Year := MAX ( 'Year'[Year] )
+
+Critical := SUM ( 'WaterBalance'[Gap (%)] ) > 40
+
+Watch := SUM ( 'WaterBalance'[Gap (%)] ) > 15 && SUM ( 'WaterBalance'[Gap (%)] ) <= 40
+
+Balanced := SUM ( 'WaterBalance'[Gap (%)] ) >= 0 && SUM ( 'WaterBalance'[Gap (%)] ) <= 15
+
+Waterbody Count := SUM ( 'Water Bodies'[Count] )
+
+Waterbody Surface (ha) := SUM ( 'Water Bodies'[Area (Ha)] )
+
+Groundwater Share % := DIVIDE ( [Supply Groundwater], [Water Available] )
+
+Surface Water Share % := DIVIDE ( [Supply Surface], [Water Available] )
+
+Storage Deficit (MCM) := [Storage Capacity] - [Storage]
+
+GW Recharge (ham) := SUM ( 'Firka GW'[Recharge (ham)] )
+
+GW Extraction (ham) := SUM ( 'Firka GW'[Total Extraction (ham)] )
+
+Net GW Draft (ham) := [GW Extraction (ham)] - [GW Recharge (ham)]
+
+Over-Exploited Firkas := COUNTROWS ( FILTER ( 'Firka GW', 'Firka GW'[Stage (%)] > 100 ) )
+
+Total Monthly Rain (mm) := SUM ( 'Rainfall Monthly'[Rainfall (mm)] )
+
+Total Observed Rain (mm) := SUM ( 'Rainfall Observed'[Rainfall (mm)] )
+
+Constituencies Covered := DISTINCTCOUNT ( 'Constituency'[Constituency] )
+
+Years Covered := DISTINCTCOUNT ( 'Year'[Year] )
+
+Rainfall Stations := DISTINCTCOUNT ( 'Rainfall Observed'[Station] )

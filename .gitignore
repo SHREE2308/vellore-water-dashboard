@@ -2,6 +2,7 @@
 *.pbix.lock
 *.tmp
 ~*.pbix
+*.backup-*.pbix
 Thumbs.db
 .DS_Store
 
@@ -18,7 +19,14 @@ venv/
 .vscode/
 .idea/
 
-# Temporary
+# Temporary / build artifacts
 _temp_*/
 _probes/
 pbixproj_target/
+_build/
+_extract/
+_modeldata/
+src/
+temp_*.bin
+temp_*.json
+screenshots/
